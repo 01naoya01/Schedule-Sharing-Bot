@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  web:
+    build:
+      # Dockerfile の app のコピーのために必要なパス指定
+      context: ../
+      # context のパスから見た Dockerfile の場所
+      dockerfile: docker/Dockerfile
+    volumes:
+      # :より左の部分は自分の環境に合わせる
+      - /var/www/html/java_prac/vol6:/app
+    ports:
+      - "8080:8080"
+      # for remote debug
+      - "5005:5005"
