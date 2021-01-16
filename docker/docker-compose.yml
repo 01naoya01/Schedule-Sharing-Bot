@@ -9,7 +9,7 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       # :より左の部分は自分の環境に合わせる
-      - /var/www/html/java_prac/vol6:/app
+      - ../:/app
     ports:
       - "8080:8080"
       # for remote debug
