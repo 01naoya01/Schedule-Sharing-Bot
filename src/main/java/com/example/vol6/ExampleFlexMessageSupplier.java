@@ -41,9 +41,14 @@ import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
+//Flex messageに関するクラス
 public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
+    String text;
     @Override
     public FlexMessage get() {
+        System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
+        String URL = createURL.get(text);
+        System.out.println("ExampleFlexMessageSupplierのURL : " + URL + "\n");
         final Image heroBlock =
                 Image.builder()
                      .url(URI.create("https://example.com/cafe.jpg"))
@@ -55,6 +60,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
 
         final Box bodyBlock = createBodyBlock();
         final Box footerBlock = createFooterBlock();
+        // https://developers.line.biz/ja/reference/messaging-api/#bubble
         final Bubble bubble =
                 Bubble.builder()
                       .hero(heroBlock)
