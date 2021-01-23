@@ -19,6 +19,7 @@ package com.example.vol6;
 import static java.util.Arrays.asList;
 
 import java.net.URI;
+import java.util.Calendar;
 import java.util.function.Supplier;
 
 import com.linecorp.bot.model.action.URIAction;
@@ -46,11 +47,26 @@ import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 //Flex messageに関するクラス
 public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
     String text;
+    CalendarEntity CalendarParam;
+    boolean debug = true;
     @Override
     public FlexMessage get() {
-        System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
-        String URL = createURL.get(text);
-        System.out.println("ExampleFlexMessageSupplierのURL : " + URL + "\n");
+        if(debug)System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
+        if(debug)System.out.println("CalendarParam.title : " + CalendarParam.title + "\n");
+        if(debug)System.out.println("CalendarParam.URL : " + CalendarParam.URL + "\n");
+        if(debug)System.out.println("年 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR))+"年" + "\n");
+        if(debug)System.out.println("月日 : " + 
+                            Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH)+1)+
+                            "月"+ 
+                            Integer.toString(CalendarParam.calendar1.get(Calendar.DATE))+
+                    "日" + "\n");
+        if(debug)System.out.println("時間分 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY)) + ":"
+                    + Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE)) + " - "
+                    + Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY)) + ":"
+                    + Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE)) + "\n");
+        if(debug)System.out.println("CalendarParam.location : " + CalendarParam.location + "\n");
+        if(debug)System.out.println("CalendarParam.details : " + CalendarParam.details + "\n");
+        
         /*
         final Image heroBlock = Image.builder().url(URI.create("https://example.com/cafe.jpg"))
                 .size(ImageSize.FULL_WIDTH).aspectRatio(ImageAspectRatio.R20TO13).aspectMode(ImageAspectMode.Cover)
@@ -65,15 +81,15 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .body(bodyBlock)
                         .footer(footerBlock)
                         .build();
-
-        return new FlexMessage("ALT", bubble);
+        if(debug)System.out.println("bubble\n");
+        return new FlexMessage("Google Calendarに予定追加", bubble);
     }
 
     private Box createBodyBlock() {
         final Separator separator = Separator.builder().build();
         final Text title =
                 Text.builder()
-                    .text("件名")
+                    .text(CalendarParam.title)
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.XL)
                     .build();
@@ -103,7 +119,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new URIAction("Google Calendarに予定追加", URI.create("https://example.com"), null))
+                      .action(new URIAction("Google Calendarに予定追加", URI.create(CalendarParam.URL), null))
                       .build();
 
         return Box.builder()
@@ -128,7 +144,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("2021年(年またいでるなら「2021-2022」とか？)")
+                        .text(Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR))+"年")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -150,7 +166,12 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("1月1日(日付複数なら「1月1日-1月3日」)")
+                        .text(
+                            Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH)+1)+
+                            "月"+ 
+                            Integer.toString(CalendarParam.calendar1.get(Calendar.DATE))+
+                            "日"
+                        )
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -172,7 +193,15 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("10:00 - 23:00(指定なければ表示しない？)")
+                        .text(
+                            Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY))+
+                            ":"+
+                            Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE))+
+                            " - "+
+                            Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY))+
+                            ":"+
+                            Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE))
+                        )
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -194,7 +223,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("場所")
+                        .text(CalendarParam.location)
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -216,7 +245,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("詳細")
+                        .text(CalendarParam.details)
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
