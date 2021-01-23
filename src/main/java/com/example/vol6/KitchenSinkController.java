@@ -364,6 +364,10 @@ public class KitchenSinkController {
             ExampleFlexMessageSupplier calendarMessage = new ExampleFlexMessageSupplier();
             calendarMessage.text = text;
             this.reply(replyToken, calendarMessage.get());
+        } else if(text.equals("追加例表示")) {
+            String example = "予定追加\n予定名\n2021/02/01 12:00\n2021/02/01 15:00";
+            log.info("Returns echo message {}: {}", replyToken, example);
+            this.replyText(replyToken, example);
         } else {
             log.info("Returns echo message {}: {}", replyToken, text);
             this.replyText(replyToken, text);
