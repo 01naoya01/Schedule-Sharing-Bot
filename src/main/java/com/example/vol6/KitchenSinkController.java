@@ -108,6 +108,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @LineMessageHandler
 public class KitchenSinkController {
+    boolean debug = true;
+    
     @Autowired
     private LineMessagingClient lineMessagingClient;
 
@@ -362,7 +364,7 @@ public class KitchenSinkController {
 
         if (text.substring(0, 4).equals("予定追加")) {
             ExampleFlexMessageSupplier calendarMessage = new ExampleFlexMessageSupplier();
-            calendarMessage.text = text;
+            calendarMessage.CalendarParam = createURL.get(text);
             this.reply(replyToken, calendarMessage.get());
         } else {
             log.info("Returns echo message {}: {}", replyToken, text);
