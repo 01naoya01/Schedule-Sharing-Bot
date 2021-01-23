@@ -21,6 +21,7 @@ import static java.util.Collections.singletonList;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -103,6 +104,7 @@ import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
+//botに送った何らかのメッセージを扱うコントローラー
 @Slf4j
 @LineMessageHandler
 public class KitchenSinkController {
@@ -112,17 +114,20 @@ public class KitchenSinkController {
     @Autowired
     private LineBlobClient lineBlobClient;
 
+    // botに送ったテキストメッセージを処理のコントロール
     @EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
         TextMessageContent message = event.getMessage();
         handleTextContent(event.getReplyToken(), event, message);
     }
 
+    //　スタンプ
     @EventMapping
     public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
         handleSticker(event.getReplyToken(), event.getMessage());
     }
-
+    
+    // 位置情報
     @EventMapping
     public void handleLocationMessageEvent(MessageEvent<LocationMessageContent> event) {
         LocationMessageContent locationMessage = event.getMessage();
@@ -133,7 +138,8 @@ public class KitchenSinkController {
                 locationMessage.getLongitude()
         ));
     }
-
+    
+    // 画像
     @EventMapping
     public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
         // You need to install ImageMagick
@@ -160,7 +166,8 @@ public class KitchenSinkController {
                           new ImageMessage(jpg.getUri(), previewImg.getUri()));
                 });
     }
-
+    
+    // 音声ファイル
     @EventMapping
     public void handleAudioMessageEvent(MessageEvent<AudioMessageContent> event) throws IOException {
         handleHeavyContent(
@@ -178,6 +185,7 @@ public class KitchenSinkController {
                 });
     }
 
+    // 動画ファイル
     @EventMapping
     public void handleVideoMessageEvent(MessageEvent<VideoMessageContent> event) throws IOException {
         log.info("Got video message: duration={}ms", event.getMessage().getDuration());
@@ -226,6 +234,7 @@ public class KitchenSinkController {
                                                  event.getMessage().getFileSize())));
     }
 
+    // フォロー解除(?)
     @EventMapping
     public void handleUnfollowEvent(UnfollowEvent event) {
         log.info("unfollowed this bot: {}", event);
@@ -236,18 +245,21 @@ public class KitchenSinkController {
         log.info("Got an unknown event!!!!! : {}", event);
     }
 
+    // フォロー(?)
     @EventMapping
     public void handleFollowEvent(FollowEvent event) {
         String replyToken = event.getReplyToken();
         this.replyText(replyToken, "Got followed event");
     }
 
+    // グループに参加したときに呼び出されるメソッドで，他人が参加したとき?
     @EventMapping
     public void handleJoinEvent(JoinEvent event) {
         String replyToken = event.getReplyToken();
         this.replyText(replyToken, "Joined " + event.getSource());
     }
 
+    // ButtonsTemplate使用時、ユーザーが選択肢のどれかを選択すると呼び出されるメソッド。
     @EventMapping
     public void handlePostbackEvent(PostbackEvent event) {
         String replyToken = event.getReplyToken();
@@ -332,17 +344,31 @@ public class KitchenSinkController {
     }
 
     private void handleSticker(String replyToken, StickerMessageContent content) {
-        reply(replyToken, new StickerMessage(
-                content.getPackageId(), content.getStickerId())
-        );
+        reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
     }
-
+    
+    //botに送ったテキストメッセージを処理するところ
     private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         final String text = content.getText();
-
+        
         log.info("Got text message from replyToken:{}: text:{} emojis:{}", replyToken, text,
-                 content.getEmojis());
+                content.getEmojis());
+
+        if (text.length() < 4) {
+            this.replyText(replyToken, text);
+            return;
+        }
+
+        if (text.substring(0, 4).equals("予定追加")) {
+            ExampleFlexMessageSupplier calendarMessage = new ExampleFlexMessageSupplier();
+            calendarMessage.text = text;
+            this.reply(replyToken, calendarMessage.get());
+        } else {
+            log.info("Returns echo message {}: {}", replyToken, text);
+            this.replyText(replyToken, text);
+        }
+        /*
         switch (text) {
             case "profile": {
                 log.info("Invoking 'profile' command: source:{}",
@@ -496,7 +522,8 @@ public class KitchenSinkController {
                                                           "Rice=米")
                                 )),
                                 new CarouselColumn(imageUrl, "Datetime Picker",
-                                                   "Please select a date, time or datetime", Arrays.asList(
+                                        "Please select a date, time or datetime", Arrays.asList(
+                                        // 日付と時間選択
                                         DatetimePickerAction.OfLocalDatetime
                                                 .builder()
                                                 .label("Datetime")
@@ -505,6 +532,7 @@ public class KitchenSinkController {
                                                 .min(LocalDateTime.parse("1900-01-01T00:00"))
                                                 .max(LocalDateTime.parse("2100-12-31T23:59"))
                                                 .build(),
+                                        // 日付選択      
                                         DatetimePickerAction.OfLocalDate
                                                 .builder()
                                                 .label("Date")
@@ -513,6 +541,7 @@ public class KitchenSinkController {
                                                 .min(LocalDate.parse("1900-01-01"))
                                                 .max(LocalDate.parse("2100-12-31"))
                                                 .build(),
+                                        // 時間選択        
                                         DatetimePickerAction.OfLocalTime
                                                 .builder()
                                                 .label("Time")
@@ -619,6 +648,7 @@ public class KitchenSinkController {
                            singletonList(new TextMessage("This message is send without a push notification")),
                            true);
                 break;
+            // Hello, I'm cat! Meow~と返し，返す時だけcat.pngがアイコンになる
             case "icon":
                 this.reply(replyToken,
                            TextMessage.builder()
@@ -629,6 +659,22 @@ public class KitchenSinkController {
                                                     .build())
                                       .build());
                 break;
+            
+            
+            //URLボタン作成デモ
+            case "url": {
+                ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "予定件名", "日付+日時",
+                        Arrays.asList(
+                                new URIAction("Google Calendarに予定を追加", URI.create("https://line.me"), null)
+                        )
+                );
+                TemplateMessage templateMessage = new TemplateMessage("Google Calendarに予定を追加", buttonsTemplate);
+                this.reply(replyToken, templateMessage);
+                break;
+            }
+            
+            
+            // textを返す，つまりオウム返し
             default:
                 log.info("Returns echo message {}: {}", replyToken, text);
                 this.replyText(
@@ -637,6 +683,7 @@ public class KitchenSinkController {
                 );
                 break;
         }
+        */
     }
 
     private static URI createUri(String path) {
@@ -673,6 +720,7 @@ public class KitchenSinkController {
         }
     }
 
+    //
     private static DownloadedContent createTempFile(String ext) {
         String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID() + '.' + ext;
         Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);

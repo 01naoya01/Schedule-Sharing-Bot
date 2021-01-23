@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class KitchenSinkApplication {
+    // KitchenSinkWebMvcConfigurer,KitchenSinkControllerで使う
     static Path downloadedContentDir;
 
     public static void main(String[] args) throws IOException {
