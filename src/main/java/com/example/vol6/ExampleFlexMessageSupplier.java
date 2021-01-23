@@ -35,8 +35,10 @@ import com.linecorp.bot.model.message.flex.component.Image.ImageSize;
 import com.linecorp.bot.model.message.flex.component.Separator;
 import com.linecorp.bot.model.message.flex.component.Spacer;
 import com.linecorp.bot.model.message.flex.component.Text;
+import com.linecorp.bot.model.message.flex.component.Text.TextDecoration;
 import com.linecorp.bot.model.message.flex.component.Text.TextWeight;
 import com.linecorp.bot.model.message.flex.container.Bubble;
+import com.linecorp.bot.model.message.flex.container.Bubble.BubbleSize;
 import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
@@ -49,119 +51,188 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
         System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
         String URL = createURL.get(text);
         System.out.println("ExampleFlexMessageSupplierのURL : " + URL + "\n");
-        final Image heroBlock =
-                Image.builder()
-                     .url(URI.create("https://example.com/cafe.jpg"))
-                     .size(ImageSize.FULL_WIDTH)
-                     .aspectRatio(ImageAspectRatio.R20TO13)
-                     .aspectMode(ImageAspectMode.Cover)
-                     .action(new URIAction("label", URI.create("http://example.com"), null))
-                     .build();
-
+        /*
+        final Image heroBlock = Image.builder().url(URI.create("https://example.com/cafe.jpg"))
+                .size(ImageSize.FULL_WIDTH).aspectRatio(ImageAspectRatio.R20TO13).aspectMode(ImageAspectMode.Cover)
+                .action(new URIAction("label", URI.create("http://example.com"), null)).build();
+        */
         final Box bodyBlock = createBodyBlock();
         final Box footerBlock = createFooterBlock();
         // https://developers.line.biz/ja/reference/messaging-api/#bubble
         final Bubble bubble =
                 Bubble.builder()
-                      .hero(heroBlock)
-                      .body(bodyBlock)
-                      .footer(footerBlock)
-                      .build();
+                        .size(BubbleSize.GIGA)
+                        .body(bodyBlock)
+                        .footer(footerBlock)
+                        .build();
 
         return new FlexMessage("ALT", bubble);
     }
 
+    private Box createBodyBlock() {
+        final Separator separator = Separator.builder().build();
+        final Text title =
+                Text.builder()
+                    .text("件名")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.XL)
+                    .build();
+
+        //final Box review = createReviewBox();
+
+        final Box info = createInfoBox();
+
+        return Box.builder()
+                  .layout(FlexLayout.VERTICAL)
+                  .contents(asList(title, separator, info))
+                  .build();
+    }
+    
     private Box createFooterBlock() {
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
+        /*
         final Button callAction = Button
                 .builder()
                 .style(ButtonStyle.LINK)
                 .height(ButtonHeight.SMALL)
                 .action(new URIAction("CALL", URI.create("tel:000000"), null))
                 .build();
+        */
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
                       .style(ButtonStyle.LINK)
                       .height(ButtonHeight.SMALL)
-                      .action(new URIAction("WEBSITE", URI.create("https://example.com"), null))
+                      .action(new URIAction("Google Calendarに予定追加", URI.create("https://example.com"), null))
                       .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .spacing(FlexMarginSize.SM)
-                  .contents(asList(spacer, callAction, separator, websiteAction))
-                  .build();
-    }
-
-    private Box createBodyBlock() {
-        final Text title =
-                Text.builder()
-                    .text("Brown Cafe")
-                    .weight(TextWeight.BOLD)
-                    .size(FlexFontSize.XL)
-                    .build();
-
-        final Box review = createReviewBox();
-
-        final Box info = createInfoBox();
-
-        return Box.builder()
-                  .layout(FlexLayout.VERTICAL)
-                  .contents(asList(title, review, info))
+                  .contents(asList(spacer, separator, websiteAction))
                   .build();
     }
 
     private Box createInfoBox() {
-        final Box place = Box
-                .builder()
-                .layout(FlexLayout.BASELINE)
-                .spacing(FlexMarginSize.SM)
-                .contents(asList(
-                        Text.builder()
-                            .text("Place")
-                            .color("#aaaaaa")
-                            .size(FlexFontSize.SM)
-                            .flex(1)
-                            .build(),
-                        Text.builder()
-                            .text("Shinjuku, Tokyo")
-                            .wrap(true)
-                            .color("#666666")
-                            .size(FlexFontSize.SM)
-                            .flex(5)
-                            .build()
-                ))
-                .build();
-        final Box time =
-                Box.builder()
-                   .layout(FlexLayout.BASELINE)
-                   .spacing(FlexMarginSize.SM)
-                   .contents(asList(
-                           Text.builder()
-                               .text("Time")
-                               .color("#aaaaaa")
-                               .size(FlexFontSize.SM)
-                               .flex(1)
-                               .build(),
-                           Text.builder()
-                               .text("10:00 - 23:00")
-                               .wrap(true)
-                               .color("#666666")
-                               .size(FlexFontSize.SM)
-                               .flex(5)
-                               .build()
-                   ))
-                   .build();
+        final Box year = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("Year")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("2021年(年またいでるなら「2021-2022」とか？)")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();
+        final Box date = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("Date")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("1月1日(日付複数なら「1月1日-1月3日」)")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();
+        final Box time = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("Time")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("10:00 - 23:00(指定なければ表示しない？)")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();
+        final Box location = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("Location")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("場所")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();
+        final Box details = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("Details")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("詳細")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();
 
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)
-                  .spacing(FlexMarginSize.SM)
-                  .contents(asList(place, time))
+                  .spacing(FlexMarginSize.LG)
+                  .contents(asList(year, date, time, location, details))
                   .build();
     }
-
+    /*
     private Box createReviewBox() {
         final Icon goldStar =
                 Icon.builder().size(FlexFontSize.SM).url(URI.create("https://example.com/gold_star.png")).build();
@@ -182,4 +253,5 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                   .contents(asList(goldStar, goldStar, goldStar, goldStar, grayStar, point))
                   .build();
     }
+    */
 }
