@@ -7,6 +7,8 @@ public class CalendarEntity {
     String title;
     String location;
     String details;
+    String errorMessage;
     Calendar calendar1;
     Calendar calendar2;
+    boolean error;
 }

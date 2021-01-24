@@ -51,38 +51,97 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
     boolean debug = true;
     @Override
     public FlexMessage get() {
-        if(debug)System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
-        if(debug)System.out.println("CalendarParam.title : " + CalendarParam.title + "\n");
-        if(debug)System.out.println("CalendarParam.URL : " + CalendarParam.URL + "\n");
-        if(debug)System.out.println("年 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR))+"年" + "\n");
-        if(debug)System.out.println("月日 : " + 
-                            Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH)+1)+
-                            "月"+ 
-                            Integer.toString(CalendarParam.calendar1.get(Calendar.DATE))+
-                    "日" + "\n");
-        if(debug)System.out.println("時間分 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY)) + ":"
-                    + Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE)) + " - "
-                    + Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY)) + ":"
-                    + Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE)) + "\n");
-        if(debug)System.out.println("CalendarParam.location : " + CalendarParam.location + "\n");
-        if(debug)System.out.println("CalendarParam.details : " + CalendarParam.details + "\n");
-        
         /*
         final Image heroBlock = Image.builder().url(URI.create("https://example.com/cafe.jpg"))
                 .size(ImageSize.FULL_WIDTH).aspectRatio(ImageAspectRatio.R20TO13).aspectMode(ImageAspectMode.Cover)
                 .action(new URIAction("label", URI.create("http://example.com"), null)).build();
         */
-        final Box bodyBlock = createBodyBlock();
-        final Box footerBlock = createFooterBlock();
-        // https://developers.line.biz/ja/reference/messaging-api/#bubble
-        final Bubble bubble =
-                Bubble.builder()
-                        .size(BubbleSize.GIGA)
-                        .body(bodyBlock)
-                        .footer(footerBlock)
-                        .build();
-        if(debug)System.out.println("bubble\n");
-        return new FlexMessage("Google Calendarに予定追加", bubble);
+
+        if (CalendarParam.error) {
+            final Box bodyBlockException = createBodyBlockException();
+            final Bubble bubble = Bubble
+                .builder()
+                .size(BubbleSize.GIGA)
+                .body(bodyBlockException)
+                .build();
+            return new FlexMessage("形式を間違えています", bubble);
+        } else {
+            if (debug)System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
+            if (debug)System.out.println("CalendarParam.title : " + CalendarParam.title + "\n");
+            if (debug)System.out.println("CalendarParam.URL : " + CalendarParam.URL + "\n");
+            if (debug)System.out.println("年 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR)) + "年" + "\n");
+            if (debug)System.out.println("月日 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH) + 1) + "月"
+                        + Integer.toString(CalendarParam.calendar1.get(Calendar.DATE)) + "日" + "\n");
+            if (debug)System.out.println("時間分 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY)) + ":"
+                        + Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE)) + " - "
+                        + Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY)) + ":"
+                        + Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE)) + "\n");
+            if (debug)System.out.println("CalendarParam.location : " + CalendarParam.location + "\n");
+            if (debug)System.out.println("CalendarParam.details : " + CalendarParam.details + "\n");
+            final Box bodyBlock = createBodyBlock();
+            final Box footerBlock = createFooterBlock();
+            // https://developers.line.biz/ja/reference/messaging-api/#bubble
+            final Bubble bubble = Bubble
+                .builder()
+                .size(BubbleSize.GIGA)
+                .body(bodyBlock)
+                .footer(footerBlock)
+                .build();
+            if (debug)
+                System.out.println("bubble\n");
+            return new FlexMessage("Google Calendarに予定追加", bubble);
+        }
+    }
+    private Box createBodyBlockException() {
+        final Separator separator = Separator.builder().margin(FlexMarginSize.XL).build();
+        final Text title =
+                Text.builder()
+                    .text("形式エラー")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.XL)
+                    .color("#ff0000ff")
+                    .build();
+        
+        final Text formatMessage =
+                Text.builder()
+                    .text("入力された形式が間違っています。\n具体的な理由:"+ CalendarParam.errorMessage+"\n以下の例に従って入力してください。\n")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.SM)
+                    .wrap(true)
+                    .color("#666666")
+                    .build();                
+        
+        final Text format =
+                Text.builder()
+                    .text(" \n予定追加\n件名\n年/月/日 時間:分:秒\n年/月/日 時間:分:秒\n場所\n詳細")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.SM)
+                    .color("#666666")
+                    .wrap(true)
+                    .build();
+        //final Box review = createReviewBox();
+
+        final Text title_example =
+                Text.builder()
+                    .text("例")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.XL)
+                    .margin(FlexMarginSize.XL)
+                    .build();
+
+        final Text exampleMessage =
+                Text.builder()
+                    .text(" \n予定追加\nオフ会\n2021/02/01 12:00:00\n2021/02/01 15:00:00\n大阪駅\n飯食ってカラオケ")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.SM)
+                    .color("#666666")
+                    .wrap(true)
+                    .build();
+        return Box.builder()
+                  .layout(FlexLayout.VERTICAL)
+                  .contents(asList(title, formatMessage, format, 
+                        separator, title_example, exampleMessage))
+                  .build();
     }
 
     private Box createBodyBlock() {
