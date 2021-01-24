@@ -10,7 +10,7 @@ public class createURL {
 
     public static CalendarEntity get(String text) {
         CalendarEntity CalendarParam = new CalendarEntity();
-        boolean debug = true;
+        boolean debug = false;
         if(debug)System.out.println("createURLのtext : " + text + "\n");
         String yotei[] = text.split("\n",0);
         if(debug)System.out.println("yotei : "+Arrays.toString(yotei));

@@ -48,7 +48,7 @@ import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
     String text;
     CalendarEntity CalendarParam;
-    boolean debug = true;
+    boolean debug = false;
     @Override
     public FlexMessage get() {
         /*

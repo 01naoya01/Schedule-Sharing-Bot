@@ -258,7 +258,7 @@ public class KitchenSinkController {
     @EventMapping
     public void handleJoinEvent(JoinEvent event) {
         String replyToken = event.getReplyToken();
-        this.replyText(replyToken, "Joined " + event.getSource());
+        this.replyText(replyToken, "Joinedaaaaaa");
     }
 
     // ButtonsTemplate使用時、ユーザーが選択肢のどれかを選択すると呼び出されるメソッド。
@@ -353,23 +353,41 @@ public class KitchenSinkController {
     private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         final String text = content.getText();
-        
-        log.info("Got text message from replyToken:{}: text:{} emojis:{}", replyToken, text,
-                content.getEmojis());
 
+        log.info("Got text message from replyToken:{}: text:{} emojis:{}", replyToken, text, content.getEmojis());
+        /*
+        if (text.equals("help")) {
+            this.replyText(replyToken, text);
+            return;
+        }
+        
         if (text.length() < 4) {
             this.replyText(replyToken, text);
             return;
         }
-
+        */
+        
         if (text.substring(0, 4).equals("予定追加")) {
             ExampleFlexMessageSupplier calendarMessage = new ExampleFlexMessageSupplier();
             calendarMessage.CalendarParam = createURL.get(text);
             this.reply(replyToken, calendarMessage.get());
-        } else {
-            log.info("Returns echo message {}: {}", replyToken, text);
-            this.replyText(replyToken, text);
         }
+        
+        /*
+        else {
+            log.info("Returns echo message {}: {}", replyToken, text);
+            this.reply(replyToken, 
+                            TextMessage.builder()
+                                .text(text)
+                                .sender(Sender.builder()
+                                        .name("Cat")
+                                        .iconUrl(createUri("/static/icon/cat.png"))
+                                        .build()
+                                )
+                                .build()
+            );
+        }
+        */
         /*
         switch (text) {
             case "profile": {
@@ -385,7 +403,7 @@ public class KitchenSinkController {
                                         this.replyText(replyToken, throwable.getMessage());
                                         return;
                                     }
-
+        
                                     this.reply(
                                             replyToken,
                                             Arrays.asList(new TextMessage("(from group)"),
@@ -403,7 +421,7 @@ public class KitchenSinkController {
                                         this.replyText(replyToken, throwable.getMessage());
                                         return;
                                     }
-
+        
                                     this.reply(
                                             replyToken,
                                             Arrays.asList(new TextMessage(
@@ -411,7 +429,7 @@ public class KitchenSinkController {
                                                           new TextMessage("Status message: "
                                                                           + profile.getStatusMessage()))
                                     );
-
+        
                                 });
                     }
                 } else {
