@@ -21,7 +21,7 @@ public class createURL {
             return CalendarParam;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         Date date1 = new Date();
         Date date2 = new Date();
 		try {
@@ -100,6 +100,6 @@ public class createURL {
 
     
     public static void main(String[] args){
-        get("予定追加\nオフ会\n2021/02/03 12:00:00\n2021/02/04 15:00:00\n大阪駅\n飯食ってカラオケ");
+        get("予定追加\nオフ会\n2021/02/03 12:00\n2021/02/04 15:00\n大阪駅\n飯食ってカラオケ");
     }
 }

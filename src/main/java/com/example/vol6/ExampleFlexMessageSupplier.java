@@ -113,7 +113,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
         
         final Text format =
                 Text.builder()
-                    .text(" \n予定追加\n件名\n年/月/日 時間:分:秒\n年/月/日 時間:分:秒\n場所\n詳細")
+                    .text(" \n予定追加\n件名\n年/月/日 時間:分\n年/月/日 時間:分\n場所\n詳細")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.SM)
                     .color("#666666")
@@ -131,7 +131,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
 
         final Text exampleMessage =
                 Text.builder()
-                    .text(" \n予定追加\nオフ会\n2021/02/01 12:00:00\n2021/02/01 15:00:00\n大阪駅\n飯食ってカラオケ")
+                    .text(" \n予定追加\nオフ会\n2021/02/01 12:00\n2021/02/01 15:00\n大阪駅\n飯食ってカラオケ")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.SM)
                     .color("#666666")
