@@ -258,7 +258,8 @@ public class KitchenSinkController {
     @EventMapping
     public void handleJoinEvent(JoinEvent event) {
         String replyToken = event.getReplyToken();
-        this.replyText(replyToken, "Joinedaaaaaa");
+        this.replyText(replyToken, "はじめまして！予定共有Botです！\nGoogle Calendarで予定を共有します！");
+        this.reply(replyToken, new ExampleFlexMessageSupplier().help_get());
     }
 
     // ButtonsTemplate使用時、ユーザーが選択肢のどれかを選択すると呼び出されるメソッド。
@@ -355,17 +356,11 @@ public class KitchenSinkController {
         final String text = content.getText();
 
         log.info("Got text message from replyToken:{}: text:{} emojis:{}", replyToken, text, content.getEmojis());
-        /*
-        if (text.equals("help")) {
-            this.replyText(replyToken, text);
-            return;
-        }
         
-        if (text.length() < 4) {
-            this.replyText(replyToken, text);
+        if (text.equals("ヘルプ")) {
+            this.reply(replyToken, new ExampleFlexMessageSupplier().help_get());  
             return;
         }
-        */
         
         if (text.substring(0, 4).equals("予定追加")) {
             ExampleFlexMessageSupplier calendarMessage = new ExampleFlexMessageSupplier();
