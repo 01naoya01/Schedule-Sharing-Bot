@@ -11,4 +11,5 @@ public class CalendarEntity {
     Calendar calendar1;
     Calendar calendar2;
     boolean error;
+    boolean allday;
 }

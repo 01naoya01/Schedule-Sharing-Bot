@@ -49,6 +49,8 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
     String text;
     CalendarEntity CalendarParam;
     boolean debug = false;
+    
+
     @Override
     public FlexMessage get() {
         /*
@@ -56,8 +58,8 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 .size(ImageSize.FULL_WIDTH).aspectRatio(ImageAspectRatio.R20TO13).aspectMode(ImageAspectMode.Cover)
                 .action(new URIAction("label", URI.create("http://example.com"), null)).build();
         */
-
-        if (CalendarParam.error) {
+        
+        if (CalendarParam.error) {                                          //エラーメッセージ生成
             final Box bodyBlockException = createBodyBlockException();
             final Bubble bubble = Bubble
                 .builder()
@@ -65,19 +67,21 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 .body(bodyBlockException)
                 .build();
             return new FlexMessage("形式を間違えています", bubble);
-        } else {
-            if (debug)System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
-            if (debug)System.out.println("CalendarParam.title : " + CalendarParam.title + "\n");
-            if (debug)System.out.println("CalendarParam.URL : " + CalendarParam.URL + "\n");
-            if (debug)System.out.println("年 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR)) + "年" + "\n");
-            if (debug)System.out.println("月日 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH) + 1) + "月"
+        } else {                                                            // URL追加メッセ―ジ生成
+            if (debug) {
+                System.out.println("ExampleFlexMessageSupplierのtext : " + text + "\n");
+                System.out.println("CalendarParam.title : " + CalendarParam.title + "\n");
+                System.out.println("CalendarParam.URL : " + CalendarParam.URL + "\n");
+                System.out.println("年 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR)) + "年" + "\n");
+                System.out.println("月日 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH) + 1) + "月"
                         + Integer.toString(CalendarParam.calendar1.get(Calendar.DATE)) + "日" + "\n");
-            if (debug)System.out.println("時間分 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY)) + ":"
+                System.out.println("時間分 : " + Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY)) + ":"
                         + Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE)) + " - "
                         + Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY)) + ":"
                         + Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE)) + "\n");
-            if (debug)System.out.println("CalendarParam.location : " + CalendarParam.location + "\n");
-            if (debug)System.out.println("CalendarParam.details : " + CalendarParam.details + "\n");
+                System.out.println("CalendarParam.location : " + CalendarParam.location + "\n");
+                System.out.println("CalendarParam.details : " + CalendarParam.details + "\n");
+            }
             final Box bodyBlock = createBodyBlock();
             final Box footerBlock = createFooterBlock();
             // https://developers.line.biz/ja/reference/messaging-api/#bubble
@@ -87,11 +91,149 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 .body(bodyBlock)
                 .footer(footerBlock)
                 .build();
-            if (debug)
-                System.out.println("bubble\n");
             return new FlexMessage("Google Calendarに予定追加", bubble);
         }
     }
+    
+    //ヘルプメッセージ生成
+    public FlexMessage help_get() {
+        final Box bodyBlockHelp = createBodyBlockHelp();
+            final Bubble bubble = Bubble
+                .builder()
+                .size(BubbleSize.GIGA)
+                .body(bodyBlockHelp)
+                .build();
+        return new FlexMessage("ヘルプ", bubble);
+    }
+    
+    final Text format_title =
+                Text.builder()
+                    .text("形式")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.LG)
+                    .margin(FlexMarginSize.LG)
+                    .decoration(TextDecoration.UNDERLINE)
+                    .build();
+    
+    final Text format =
+            Text.builder()
+                .text(" \n予定追加\n件名\n年/月/日 時間:分\n年/月/日 時間:分\n場所\n詳細")
+                .weight(TextWeight.BOLD)
+                .size(FlexFontSize.SM)
+                .color("#666666")
+                .wrap(true)
+                .build();
+    //final Box review = createReviewBox();
+
+    final Text example1_title =
+            Text.builder()
+                .text("例1")
+                .weight(TextWeight.BOLD)
+                .size(FlexFontSize.LG)
+                .margin(FlexMarginSize.LG)
+                .decoration(TextDecoration.UNDERLINE)
+                .build();
+
+    final Text example1_Message =
+            Text.builder()
+                .text(" \n予定追加\nオフ会\n2021/02/01 12:00\n2021/02/01 15:00\n梅田HEP前\nご飯食べてカラオケ")
+                .weight(TextWeight.BOLD)
+                .size(FlexFontSize.SM)
+                .color("#666666")
+                .wrap(true)
+                .build();
+
+    final Text example2_title =
+            Text.builder()
+                .text("例2")
+                .weight(TextWeight.BOLD)
+                .size(FlexFontSize.LG)
+                .margin(FlexMarginSize.LG)
+                .decoration(TextDecoration.UNDERLINE)
+                .build();
+
+    final Text example2_Message =
+            Text.builder()
+                .text(" \n予定追加\n\n2021/3/1\n2021/3/8\n\nご飯食べてカラオケ")
+                .weight(TextWeight.BOLD)
+                .size(FlexFontSize.SM)
+                .color("#666666")
+                .wrap(true)
+                .build();
+    //ヘルプメッセージのbody作成
+    private Box createBodyBlockHelp() {
+        final Separator separator = Separator.builder().margin(FlexMarginSize.XL).build();
+        final Text title =
+                Text.builder()
+                    .text("～HELP～")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.XL)
+                    .color("#21dad1ff")
+                    .build();
+        
+        final Text command_title =
+                Text.builder()
+                    .text("コマンド")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.LG)
+                    .margin(FlexMarginSize.LG)
+                    .decoration(TextDecoration.UNDERLINE)
+                    .build();
+        
+        final Box command_help = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("ヘルプ")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("ヘルプを表示します。")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();
+
+        final Box command_add = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("予定追加")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(1)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("以下の形式と例に従って入力してください。\n件名，場所，詳細は記入しなくても問題ないですが，改行して空けてください。\n時刻(時間:分)を省略すると終日の予定となります。\n一桁の月，日，時間，分の時の頭の0は省略できます。")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(4)
+                        .build()
+            ))
+            .build();              
+                    
+        return Box.builder()
+                  .layout(FlexLayout.VERTICAL)
+                  .contents(asList(title, separator, command_title, 
+                        command_help, command_add, 
+                    separator, format_title, format, separator,
+                    example1_title, example1_Message, separator, example2_title, example2_Message))
+                  .build();
+    }
+
+    //エラーメッセージのbody生成
     private Box createBodyBlockException() {
         final Separator separator = Separator.builder().margin(FlexMarginSize.XL).build();
         final Text title =
@@ -104,46 +246,24 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
         
         final Text formatMessage =
                 Text.builder()
-                    .text("入力された形式が間違っています。\n具体的な理由:"+ CalendarParam.errorMessage+"\n以下の例に従って入力してください。\n")
+                    .text("入力された形式が間違っています。\n具体的な理由:"+ CalendarParam.errorMessage+"\n以下の形式と例に従って入力してください。")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.SM)
                     .wrap(true)
-                    .color("#666666")
-                    .build();                
-        
-        final Text format =
-                Text.builder()
-                    .text(" \n予定追加\n件名\n年/月/日 時間:分\n年/月/日 時間:分\n場所\n詳細")
-                    .weight(TextWeight.BOLD)
-                    .size(FlexFontSize.SM)
-                    .color("#666666")
-                    .wrap(true)
-                    .build();
-        //final Box review = createReviewBox();
-
-        final Text title_example =
-                Text.builder()
-                    .text("例")
-                    .weight(TextWeight.BOLD)
-                    .size(FlexFontSize.XL)
                     .margin(FlexMarginSize.XL)
-                    .build();
-
-        final Text exampleMessage =
-                Text.builder()
-                    .text(" \n予定追加\nオフ会\n2021/02/01 12:00\n2021/02/01 15:00\n大阪駅\n飯食ってカラオケ")
-                    .weight(TextWeight.BOLD)
-                    .size(FlexFontSize.SM)
                     .color("#666666")
-                    .wrap(true)
                     .build();
+                    
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
-                  .contents(asList(title, formatMessage, format, 
-                        separator, title_example, exampleMessage))
+                  .contents(asList(title, separator,formatMessage, 
+                        separator, format_title, format, 
+                        separator, example1_title, example1_Message, separator,
+                        example2_title, example2_Message))
                   .build();
     }
-
+    
+    // 予定URLメッセージのbody生成
     private Box createBodyBlock() {
         final Separator separator = Separator.builder().build();
         final Text title =
@@ -163,6 +283,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                   .build();
     }
     
+    // 予定URLメッセージのfooter生成
     private Box createFooterBlock() {
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
         /*
@@ -188,7 +309,41 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                   .build();
     }
 
+    // 予定URLメッセージの予定情報のbox生成
     private Box createInfoBox() {
+        String year_str, date_str ,time_str;
+        String year1 = Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR));
+        String year2 = Integer.toString(CalendarParam.calendar2.get(Calendar.YEAR));
+        String month1 = Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH) + 1);
+        String month2 = Integer.toString(CalendarParam.calendar2.get(Calendar.MONTH) + 1);
+        String day1 = Integer.toString(CalendarParam.calendar1.get(Calendar.DATE));
+        String day2 = Integer.toString(CalendarParam.calendar2.get(Calendar.DATE));
+        
+        //年が一致しているかで表示を変更している
+        if (year1.equals(year2)) {
+            year_str = year1;
+        } else {
+            year_str = year1 + " - " + year2;
+        }
+        
+        //日付が一致しているかで表示を変更している
+        if (month1.equals(month2) && day1.equals(day2)) {
+            date_str = month1 + "月" + day1 + "日";
+        } else {
+            date_str = month1 + "月" + day1 + "日 - " + month2 + "月" + day2 + "日";
+        }
+        
+        //終日であるかどうかで表示を変更している
+        if (CalendarParam.allday) {
+            time_str = "終日";
+        } else {
+            String hour1 = Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY));
+            String hour2 = Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY));
+            String minute1 = Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE));
+            String minute2 = Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE));
+            time_str = hour1 + ":" + minute1 + " - " + hour2 + ":" + minute2;
+        }
+
         final Box year = Box
             .builder()
             .layout(FlexLayout.BASELINE)
@@ -203,7 +358,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text(Integer.toString(CalendarParam.calendar1.get(Calendar.YEAR))+"年")
+                        .text(year_str+"年")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -225,12 +380,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text(
-                            Integer.toString(CalendarParam.calendar1.get(Calendar.MONTH)+1)+
-                            "月"+ 
-                            Integer.toString(CalendarParam.calendar1.get(Calendar.DATE))+
-                            "日"
-                        )
+                        .text(date_str)
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
@@ -252,15 +402,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text(
-                            Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY))+
-                            ":"+
-                            Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE))+
-                            " - "+
-                            Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY))+
-                            ":"+
-                            Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE))
-                        )
+                        .text(time_str)
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
