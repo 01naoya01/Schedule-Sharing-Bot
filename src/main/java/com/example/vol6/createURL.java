@@ -30,18 +30,8 @@ public class createURL {
         sdf.setLenient(false);
         Date d1 = new Date();
         Date d2 = new Date();
+        
         //例外処理：日付が形式通りかどうか
-        /*
-        try {
-            date1 = sdf.parse(schedule[2]);
-            date2 = sdf.parse(schedule[3]);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            CalendarParam.error = true;
-            CalendarParam.errorMessage = "日付の部分が形式通りになっていないか，件名の欄がありません。";
-            return CalendarParam;
-        }
-        */
 		try {
             d1 = sdf.parse(schedule[2]);
             d2 = sdf.parse(schedule[3]);
@@ -127,8 +117,7 @@ public class createURL {
         }
         dates1 = sdf.format(CalendarParam.calendar1.getTime());
 
-        //sdf.format(CalendarParam.calendar1.getTime())
-        //sdf.format(CalendarParam.calendar2.getTime())
+
         CalendarParam.URL = "http://www.google.com/calendar/event?action=" + action + "&text=" + CalendarParam.title
                 + "&dates="
                 + dates1
@@ -168,9 +157,10 @@ public class createURL {
 		return CalendarParam;
     }
 
-    
+    /*
     public static void main(String[] args){
         //get("予定追加\nオフ会\n2021/02/03 12:00\n2021/02/04 15:00\n大阪駅\n飯食ってカラオケ");
         get("予定追加\nオフ会\n2021/2/3\n2021/02/04\n大阪駅\n飯食ってカラオケ");
     }
+    */
 }
