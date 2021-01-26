@@ -1,19 +1,3 @@
-/*
- * Copyright 2018 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
 package com.example.vol6;
 
 import static java.util.Arrays.asList;
@@ -28,11 +12,6 @@ import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
 import com.linecorp.bot.model.message.flex.component.Button.ButtonHeight;
 import com.linecorp.bot.model.message.flex.component.Button.ButtonStyle;
-import com.linecorp.bot.model.message.flex.component.Icon;
-import com.linecorp.bot.model.message.flex.component.Image;
-import com.linecorp.bot.model.message.flex.component.Image.ImageAspectMode;
-import com.linecorp.bot.model.message.flex.component.Image.ImageAspectRatio;
-import com.linecorp.bot.model.message.flex.component.Image.ImageSize;
 import com.linecorp.bot.model.message.flex.component.Separator;
 import com.linecorp.bot.model.message.flex.component.Spacer;
 import com.linecorp.bot.model.message.flex.component.Text;
@@ -45,7 +24,7 @@ import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
 
 //Flex messageに関するクラス
-public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
+public class FlexMessageSupplier implements Supplier<FlexMessage> {
     String text;
     CalendarEntity CalendarParam;
     boolean debug = false;
@@ -53,11 +32,6 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
 
     @Override
     public FlexMessage get() {
-        /*
-        final Image heroBlock = Image.builder().url(URI.create("https://example.com/cafe.jpg"))
-                .size(ImageSize.FULL_WIDTH).aspectRatio(ImageAspectRatio.R20TO13).aspectMode(ImageAspectMode.Cover)
-                .action(new URIAction("label", URI.create("http://example.com"), null)).build();
-        */
         
         if (CalendarParam.error) {                                          //エラーメッセージ生成
             final Box bodyBlockException = createBodyBlockException();
@@ -84,7 +58,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
             }
             final Box bodyBlock = createBodyBlock();
             final Box footerBlock = createFooterBlock();
-            // https://developers.line.biz/ja/reference/messaging-api/#bubble
+            
             final Bubble bubble = Bubble
                 .builder()
                 .size(BubbleSize.GIGA)
@@ -123,7 +97,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 .color("#666666")
                 .wrap(true)
                 .build();
-    //final Box review = createReviewBox();
+
 
     final Text example1_title =
             Text.builder()
@@ -160,6 +134,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                 .color("#666666")
                 .wrap(true)
                 .build();
+                
     //ヘルプメッセージのbody作成
     private Box createBodyBlockHelp() {
         final Separator separator = Separator.builder().margin(FlexMarginSize.XL).build();
@@ -286,14 +261,7 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
     // 予定URLメッセージのfooter生成
     private Box createFooterBlock() {
         final Spacer spacer = Spacer.builder().size(FlexMarginSize.SM).build();
-        /*
-        final Button callAction = Button
-                .builder()
-                .style(ButtonStyle.LINK)
-                .height(ButtonHeight.SMALL)
-                .action(new URIAction("CALL", URI.create("tel:000000"), null))
-                .build();
-        */
+
         final Separator separator = Separator.builder().build();
         final Button websiteAction =
                 Button.builder()
@@ -462,26 +430,4 @@ public class ExampleFlexMessageSupplier implements Supplier<FlexMessage> {
                   .contents(asList(year, date, time, location, details))
                   .build();
     }
-    /*
-    private Box createReviewBox() {
-        final Icon goldStar =
-                Icon.builder().size(FlexFontSize.SM).url(URI.create("https://example.com/gold_star.png")).build();
-        final Icon grayStar =
-                Icon.builder().size(FlexFontSize.SM).url(URI.create("https://example.com/gray_star.png")).build();
-        final Text point =
-                Text.builder()
-                    .text("4.0")
-                    .size(FlexFontSize.SM)
-                    .color("#999999")
-                    .margin(FlexMarginSize.MD)
-                    .flex(0)
-                    .build();
-
-        return Box.builder()
-                  .layout(FlexLayout.BASELINE)
-                  .margin(FlexMarginSize.MD)
-                  .contents(asList(goldStar, goldStar, goldStar, goldStar, grayStar, point))
-                  .build();
-    }
-    */
 }
