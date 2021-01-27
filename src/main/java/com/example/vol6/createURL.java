@@ -58,7 +58,7 @@ public class createURL {
             } catch (ParseException e2) {
                 e2.printStackTrace();
                 CalendarParam.error = true;
-                CalendarParam.errorMessage = "日付の部分が形式通りになっていないか，件名の欄がありません。";
+                CalendarParam.errorMessage = "日付の部分が形式通りになっていないか、件名の欄がありません。";
                 return CalendarParam;
             }
         }
@@ -71,7 +71,7 @@ public class createURL {
         // 例外処理：日付の前後が逆
         if (CalendarParam.calendar1.compareTo(CalendarParam.calendar2) > 0) {
             CalendarParam.error = true;
-            CalendarParam.errorMessage = "予定終了の日時は，開始の日時より後にする必要があります。";
+            CalendarParam.errorMessage = "予定終了の日時は、開始の日時より後にする必要があります。";
             return CalendarParam;
         }
         
@@ -126,10 +126,25 @@ public class createURL {
                 + "&location=" + CalendarParam.location + "&details="
                 + CalendarParam.details;
         
-        System.out.println("\n"+CalendarParam.URL+"\n");
+        System.out.println("\n" + CalendarParam.URL + "\n");
+
+        /*
+        CalendarParam.URL = "https://calendar.google.com/calendar/r/eventedit?text=" + CalendarParam.title
+                + "&dates="
+                + dates1
+                + "/" 
+                + dates2
+                + "&location=" + CalendarParam.location + "&details="
+                + CalendarParam.details
+                + "&sf=true";
+        
+        System.out.println("\n" + CalendarParam.URL + "\n");
+        */
+
         if (CalendarParam.location.equals("")) {
             CalendarParam.location = "指定なし";
         }
+
         if (CalendarParam.details.equals("")) {
             CalendarParam.details = "指定なし";
         }

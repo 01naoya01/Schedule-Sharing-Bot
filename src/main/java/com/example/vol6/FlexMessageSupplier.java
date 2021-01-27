@@ -165,6 +165,7 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
                         .color("#aaaaaa")
                         .size(FlexFontSize.SM)
                         .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
@@ -187,24 +188,128 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
                         .color("#aaaaaa")
                         .size(FlexFontSize.SM)
                         .flex(1)
+                        .decoration(TextDecoration.UNDERLINE)
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("以下の形式と例に従って入力してください。\n件名，場所，詳細は記入しなくても問題ないですが，改行して空けてください。\n時刻(時間:分)を省略すると終日の予定となります。\n一桁の月，日，時間，分の時の頭の0は省略できます。")
+                        .text("以下の形式と例に従って入力してください。")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)
                         .flex(4)
                         .build()
             ))
-            .build();              
-                    
+                .build();
+
+        final Text note_title =
+                Text.builder()
+                    .text("※注意※")
+                    .weight(TextWeight.BOLD)
+                    .size(FlexFontSize.LG)
+                    .margin(FlexMarginSize.LG)
+                        .color("#ff0000ff")
+                    .decoration(TextDecoration.UNDERLINE)
+                    .build();
+        int left = 0, right = 10;
+
+        final Box note1 = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("①")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(left)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("件名、場所、詳細は記入しなくても問題ないですが、改行して空けてください。")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(right)
+                        .build()
+            ))
+            .build();
+        
+        final Box note2 = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("②")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(left)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("時刻(時間:分)を省略すると終日の予定となります。")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(right)
+                        .build()
+            ))
+            .build();
+        
+        final Box note3 = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("③")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(left)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("一桁の月、日、時間、分の時の頭の0は省略できます。")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(right)
+                        .build()
+            ))
+            .build();
+
+        final Box note4 = Box
+            .builder()
+            .layout(FlexLayout.BASELINE)
+            .spacing(FlexMarginSize.XL)
+            .contents(asList(
+                    Text.builder()
+                        .text("④")
+                        .color("#aaaaaa")
+                        .size(FlexFontSize.SM)
+                        .flex(left)
+                        .decoration(TextDecoration.UNDERLINE)
+                        .weight(TextWeight.BOLD)
+                        .build(),
+                    Text.builder()
+                        .text("スマートフォンのGoogle CalendarアプリはURLでの追加の挙動が不安定ですので、ブラウザで開くことを推奨します。")
+                        .wrap(true)
+                        .color("#666666")
+                        .size(FlexFontSize.SM)
+                        .flex(right)
+                        .build()
+            ))
+            .build();
+        
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .contents(asList(title, separator, command_title, 
                         command_help, command_add, 
                     separator, format_title, format, separator,
-                    example1_title, example1_Message, separator, example2_title, example2_Message))
+                    example1_title, example1_Message, separator, example2_title, example2_Message, separator, note_title , note1, note2, note3, note4))
                   .build();
     }
 
@@ -305,10 +410,11 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
         if (CalendarParam.allday) {
             time_str = "終日";
         } else {
-            String hour1 = Integer.toString(CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY));
-            String hour2 = Integer.toString(CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY));
-            String minute1 = Integer.toString(CalendarParam.calendar1.get(Calendar.MINUTE));
-            String minute2 = Integer.toString(CalendarParam.calendar2.get(Calendar.MINUTE));
+
+            String hour1 = String.format("%02d", CalendarParam.calendar1.get(Calendar.HOUR_OF_DAY));
+            String hour2 = String.format("%02d", CalendarParam.calendar2.get(Calendar.HOUR_OF_DAY));
+            String minute1 = String.format("%02d", CalendarParam.calendar1.get(Calendar.MINUTE));
+            String minute2 = String.format("%02d", CalendarParam.calendar2.get(Calendar.MINUTE));
             time_str = hour1 + ":" + minute1 + " - " + hour2 + ":" + minute2;
         }
 
@@ -421,8 +527,8 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
                         .flex(4)
                         .build()
             ))
-            .build();
-
+                .build();
+            
         return Box.builder()
                   .layout(FlexLayout.VERTICAL)
                   .margin(FlexMarginSize.LG)

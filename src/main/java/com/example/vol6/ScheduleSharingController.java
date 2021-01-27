@@ -91,7 +91,7 @@ public class ScheduleSharingController {
             return;
         }
 
-        if(text.length() < 5){
+        if(text.length() < 4){
             return;
         }
 
