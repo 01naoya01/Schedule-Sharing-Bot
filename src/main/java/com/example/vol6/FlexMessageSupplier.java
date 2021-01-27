@@ -29,7 +29,6 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
     CalendarEntity CalendarParam;
     boolean debug = false;
     
-
     @Override
     public FlexMessage get() {
         
