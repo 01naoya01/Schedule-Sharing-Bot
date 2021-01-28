@@ -1,4 +1,4 @@
-package com.example.vol6;
+package com.schedulesharingbot;
 
 import java.util.Arrays;
 import java.util.Calendar;

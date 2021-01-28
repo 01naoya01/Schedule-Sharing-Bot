@@ -1,4 +1,4 @@
-package com.example.vol6;
+package com.schedulesharingbot;
 
 import static java.util.Collections.singletonList;
 import java.net.URI;

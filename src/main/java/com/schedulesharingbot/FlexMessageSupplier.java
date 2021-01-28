@@ -1,4 +1,4 @@
-package com.example.vol6;
+package com.schedulesharingbot;
 
 import static java.util.Arrays.asList;
 
@@ -325,7 +325,7 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
         
         final Text formatMessage =
                 Text.builder()
-                    .text("入力された形式が間違っています。\n具体的な理由:"+ CalendarParam.errorMessage+"\n以下の形式と例に従って入力してください。")
+                    .text("入力された形式が間違っています。\n具体的な理由:"+ CalendarParam.errorMessage+"\n以下の形式と例に従って入力してください。\n1つ目の日付は予定開始，2つ目の日付は予定終了を表しています。")
                     .weight(TextWeight.BOLD)
                     .size(FlexFontSize.SM)
                     .wrap(true)

@@ -1,4 +1,4 @@
-package com.example.vol6;
+package com.schedulesharingbot;
 
 import java.io.IOException;
 import java.nio.file.Files;

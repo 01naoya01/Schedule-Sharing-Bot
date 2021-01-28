@@ -1,4 +1,4 @@
-package com.example.vol6;
+package com.schedulesharingbot;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
