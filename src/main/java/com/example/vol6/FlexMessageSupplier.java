@@ -191,7 +191,7 @@ public class FlexMessageSupplier implements Supplier<FlexMessage> {
                         .weight(TextWeight.BOLD)
                         .build(),
                     Text.builder()
-                        .text("以下の形式と例に従って入力してください。")
+                        .text("入力された予定をGoogle Calendarで共有するボタンを返します。\n以下の形式と例に従って入力してください。")
                         .wrap(true)
                         .color("#666666")
                         .size(FlexFontSize.SM)

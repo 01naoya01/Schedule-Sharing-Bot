@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ScheduleSharingApplication {
-    // KitchenSinkWebMvcConfigurer,KitchenSinkControllerで使う
+    // ScheduleSharingWebMvcConfigurer,ScheduleSharingControllerで使う
     static Path downloadedContentDir;
 
     public static void main(String[] args) throws IOException {
